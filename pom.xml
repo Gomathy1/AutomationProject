@@ -151,6 +151,10 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <!-- Exclude contract tests from default run (they use JUnit5) -->
+                    <excludes>
+                        <exclude>**/contract/**/*Test.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

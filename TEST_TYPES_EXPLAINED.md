@@ -201,10 +201,11 @@ public V4Pact getUserByIdPact(PactDslWithProvider builder) {
 
 ## 🏃 Running Tests
 
-### Run All Tests (TestNG)
+### Run All Tests (TestNG - excludes contract tests)
 ```bash
 mvn test
 ```
+This runs: Unit, API, UI, and Security tests (via testng.xml)
 
 ### Run Specific Type
 ```bash
@@ -217,13 +218,25 @@ mvn test -Dtest=api.*
 # UI tests only
 mvn test -Dtest=ui.*
 
-# Contract tests only (JUnit5)
-mvn test -Dtest=contract.*
+# Security tests only
+mvn test -Dtest=security.*
+
+# Contract tests only (JUnit5 - separate execution)
+mvn test -Dtest=contract.consumer.*
 ```
 
 ### Run Single Test Class
 ```bash
 mvn test -Dtest=UserAPITest
+```
+
+### Run All Tests Including Contract Tests
+```bash
+# Run TestNG tests
+mvn test
+
+# Then run Contract tests separately
+mvn test -Dtest=contract.consumer.*
 ```
 
 ---
