@@ -91,29 +91,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Pact for Contract Testing (Java 11 compatible) -->
-        <dependency>
-            <groupId>au.com.dius.pact.consumer</groupId>
-            <artifactId>junit5</artifactId>
-            <version>4.3.19</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>au.com.dius.pact.provider</groupId>
-            <artifactId>junit5</artifactId>
-            <version>4.3.19</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- JUnit 5 for Pact -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.10.1</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- OWASP ZAP for Security Testing -->
         <dependency>
             <groupId>org.zaproxy</groupId>
@@ -151,10 +128,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <!-- Exclude contract tests from default run (they use JUnit5) -->
-                    <excludes>
-                        <exclude>**/contract/**/*Test.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

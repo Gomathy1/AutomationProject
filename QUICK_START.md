@@ -8,8 +8,6 @@ mvn test
 ```
 **Runs:** Unit (8) + API (6) + UI (4) + Security (9) = **27 tests**
 
-**Note:** Contract tests are excluded by default (they use JUnit5)
-
 ---
 
 ## 📦 Run Tests by Type
@@ -26,9 +24,6 @@ mvn test -Dtest=ui.*
 
 # Security Tests (9 tests)
 mvn test -Dtest=security.*
-
-# Contract Tests (2 tests - JUnit5)
-mvn test -Dtest=contract.consumer.*
 ```
 
 ---
@@ -63,18 +58,11 @@ mvn test -Dtest=ui.* -Dbrowser=firefox
 | API | 2 | 6 | TestNG + REST Assured | ⚡⚡ |
 | UI | 2 | 4 | TestNG + Selenium | 🐌 |
 | Security | 3 | 9 | TestNG + REST Assured | ⚡⚡ |
-| Contract | 1 | 2 | JUnit5 + Pact | ⚡⚡ |
-| **Total** | **11** | **29** | - | - |
+| **Total** | **10** | **27** | - | - |
 
 ---
 
 ## 🔧 Common Issues
-
-### Issue: Contract tests fail
-**Solution:** Run them separately with JUnit5:
-```bash
-mvn test -Dtest=contract.consumer.*
-```
 
 ### Issue: UI tests fail
 **Solution:** Ensure browser drivers are available (WebDriverManager handles this automatically)
@@ -94,8 +82,7 @@ src/test/java/
 ├── unit/          → Fast, isolated tests with mocks
 ├── api/           → REST API endpoint tests
 ├── ui/            → Browser-based E2E tests
-├── security/      → Security vulnerability tests
-└── contract/      → Service contract tests (JUnit5)
+└── security/      → Security vulnerability tests
 ```
 
 ---
@@ -103,9 +90,9 @@ src/test/java/
 ## 📖 Documentation
 
 - **TEST_TYPES_EXPLAINED.md** - Detailed explanation of each test type
-- **CONTRACT_TESTING.md** - Contract testing guide
 - **SECURITY_TESTING.md** - Security testing guide
 - **TEST_STRUCTURE.md** - Project structure details
+- **CONTRACT_TESTING.md** - Contract testing guide (reference only)
 
 ---
 
@@ -115,11 +102,8 @@ src/test/java/
 # Install dependencies
 mvn clean install
 
-# Run all TestNG tests
+# Run all tests
 mvn test
-
-# Run all tests including contract tests
-mvn test && mvn test -Dtest=contract.consumer.*
 
 # Clean and run tests
 mvn clean test
@@ -135,7 +119,6 @@ mvn clean install -DskipTests
 1. **Unit Tests** → Fastest feedback
 2. **Security Tests** → Check vulnerabilities
 3. **API Tests** → Validate endpoints
-4. **Contract Tests** → Verify service contracts
-5. **UI Tests** → End-to-end validation
+4. **UI Tests** → End-to-end validation
 
 This ensures **fast failure** and efficient testing!
