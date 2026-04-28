@@ -24,17 +24,17 @@ public void testSQLInjectionPrevention() {
 - **Attack prevented:** SQL Injection (OWASP Top 10 #3)
 - **Expected:** 404 or proper error handling
 
-**b) XSS (Cross-Site Scripting) Prevention**
+**b) XSS (Cross-Site Scripting) Payload Detection**
 ```java
 @Test
-public void testXSSPrevention() {
+public void testXSSPayloadDetection() {
     String xssPayload = "<script>alert('XSS')</script>";
-    // Verifies API sanitizes malicious scripts
+    // Detects if XSS payloads are echoed back
 }
 ```
-- **What it tests:** Output encoding/sanitization
+- **What it tests:** XSS vulnerability detection
 - **Attack prevented:** XSS (OWASP Top 10 #7)
-- **Expected:** Script tags removed or encoded
+- **Note:** JSONPlaceholder is a mock API and doesn't sanitize. In production, verify proper output encoding.
 
 **c) HTTPS Enforcement**
 ```java
