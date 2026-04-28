@@ -31,34 +31,37 @@ jobs:
     - name: Count test files
       id: count-tests
       run: |
-        UNIT_TESTS=$(find src/test -name "*Test.java" 2>/dev/null | wc -l)
-        E2E_TESTS=$(find . -name "*.feature" 2>/dev/null | wc -l)
+        UNIT_TESTS=$(find src/test/java/unit -name "*Test.java" 2>/dev/null | wc -l)
+        API_TESTS=$(find src/test/java/api -name "*Test.java" 2>/dev/null | wc -l)
+        UI_TESTS=$(find src/test/java/ui -name "*Test.java" 2>/dev/null | wc -l)
         echo "unit=$UNIT_TESTS" >> $GITHUB_OUTPUT
-        echo "e2e=$E2E_TESTS" >> $GITHUB_OUTPUT
+        echo "api=$API_TESTS" >> $GITHUB_OUTPUT
+        echo "ui=$UI_TESTS" >> $GITHUB_OUTPUT
     
     - name: Comment on PR
       uses: actions/github-script@v7
       with:
         script: |
           const unitTests = '${{ steps.count-tests.outputs.unit }}';
-          const e2eTests = '${{ steps.count-tests.outputs.e2e }}';
+          const apiTests = '${{ steps.count-tests.outputs.api }}';
+          const uiTests = '${{ steps.count-tests.outputs.ui }}';
           const changedFiles = '${{ steps.changed-files.outputs.all_changed_files }}';
           
-          let status = '🔴';
+          const totalTests = parseInt(unitTests) + parseInt(apiTests) + parseInt(uiTests);
+          let status = '�';
           let message = 'no tests found';
           
-          if (parseInt(unitTests) > 0 || parseInt(e2eTests) > 0) {
-            status = '🟢';
+          if (totalTests > 0) {
+            status = '�';
             message = 'tests found';
-          } else if (parseInt(unitTests) > 0) {
-            status = '🟡';
-            message = 'some tests found';
           }
           
           const body = `## Test Presence Check: ${message} ${status}
           
           **Unit tests:** ${unitTests > 0 ? unitTests + ' test file(s)' : 'No unit tests found'}
-          **E2E tests:** ${e2eTests > 0 ? e2eTests + ' test file(s)' : 'No E2E tests found'}
+          **API tests:** ${apiTests > 0 ? apiTests + ' test file(s)' : 'No API tests found'}
+          **UI tests:** ${uiTests > 0 ? uiTests + ' test file(s)' : 'No UI tests found'}
+          **Total:** ${totalTests} test file(s)
           
           ${changedFiles ? '**Changed test files:**\n' + changedFiles.split(' ').map(f => '- `' + f + '`').join('\n') : ''}`;
           

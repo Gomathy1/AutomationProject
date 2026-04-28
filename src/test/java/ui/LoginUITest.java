@@ -1,10 +1,10 @@
-package tests;
+package ui;
 
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import utils.DriverManager;
 
-public class LoginTest extends BaseTest {
+public class LoginUITest extends BaseUITest {
 
     @Test
     public void testUserSignup() {
@@ -21,7 +21,7 @@ public class LoginTest extends BaseTest {
     public void testLoginPageElements() {
         DriverManager.getDriver().get("https://automationexercise.com/login");
         
-        LoginPage loginPage = new LoginPage(DriverManager.getDriver());
+        new LoginPage(DriverManager.getDriver());
         
         System.out.println("Login page elements verified!");
     }
