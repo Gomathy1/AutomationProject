@@ -1,0 +1,11 @@
+# Code owners are automatically requested for review when someone opens a pull request
+
+# Default owner for everything in the repo
+* @Gomathy1
+
+# Test files require review
+/src/test/ @Gomathy1
+
+# Configuration files
+*.xml @Gomathy1
+*.yml @Gomathy1

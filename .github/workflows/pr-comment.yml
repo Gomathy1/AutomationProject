@@ -1,0 +1,102 @@
+name: PR Comment Bot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  test-presence-check:
+    name: Check Test Files
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v44
+      with:
+        files: |
+          **/*Test.java
+          **/*test*.java
+          **/*.feature
+    
+    - name: Count test files
+      id: count-tests
+      run: |
+        UNIT_TESTS=$(find src/test -name "*Test.java" 2>/dev/null | wc -l)
+        E2E_TESTS=$(find . -name "*.feature" 2>/dev/null | wc -l)
+        echo "unit=$UNIT_TESTS" >> $GITHUB_OUTPUT
+        echo "e2e=$E2E_TESTS" >> $GITHUB_OUTPUT
+    
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const unitTests = '${{ steps.count-tests.outputs.unit }}';
+          const e2eTests = '${{ steps.count-tests.outputs.e2e }}';
+          const changedFiles = '${{ steps.changed-files.outputs.all_changed_files }}';
+          
+          let status = '🔴';
+          let message = 'no tests found';
+          
+          if (parseInt(unitTests) > 0 || parseInt(e2eTests) > 0) {
+            status = '🟢';
+            message = 'tests found';
+          } else if (parseInt(unitTests) > 0) {
+            status = '🟡';
+            message = 'some tests found';
+          }
+          
+          const body = `## Test Presence Check: ${message} ${status}
+          
+          **Unit tests:** ${unitTests > 0 ? unitTests + ' test file(s)' : 'No unit tests found'}
+          **E2E tests:** ${e2eTests > 0 ? e2eTests + ' test file(s)' : 'No E2E tests found'}
+          
+          ${changedFiles ? '**Changed test files:**\n' + changedFiles.split(' ').map(f => '- `' + f + '`').join('\n') : ''}`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+  
+  code-quality-check:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: Build project
+      run: mvn clean compile
+    
+    - name: Comment build status
+      if: always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ job.status }}' === 'success' ? '✅' : '❌';
+          const body = `## Build Status ${status}\n\nBuild ${status === '✅' ? 'passed' : 'failed'}`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
