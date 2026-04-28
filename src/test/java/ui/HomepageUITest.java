@@ -1,10 +1,10 @@
-package tests;
+package ui;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.DriverManager;
 
-public class HomepageTest extends BaseTest {
+public class HomepageUITest extends BaseUITest {
 
     @Test
     public void testHomepageTitle() {
